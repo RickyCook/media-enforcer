@@ -18,6 +18,9 @@ my $TAGS = [qw(
 	240p 288p 480p 720p 1080p
 	HDTV DVDRip BDRip
 )];
+my $TAGS_SYNONYMS = {
+	BDRip => [qw(BRRip BluRay)],
+};
 my $RIPPERS = [qw(
 	2HD AFG DIMENSION EVOLVE FoV FQM HANNiBAL IMMERSE
 	Indi LOL MOMENTUM NPFS m00tv ORENJI SYS TLA TSV
@@ -106,6 +109,16 @@ find(sub {
 			}
 		}
 		if (@tags_list) {
+			foreach my $tag (@tags_list) {
+				$tag = "[$tag]";
+				foreach my $real_tag (keys %$TAGS_SYNONYMS) {
+					foreach my $synonym (@{$TAGS_SYNONYMS->{$real_tag}}) {
+						if ($tag =~ /$synonym/i) {
+							$tag .= "->[$real_tag]";
+						}
+					}
+				}
+			}
 			print_error 'Invalid tag(s) ' . join(', ', @tags_list);
 			return 1;
 		}
