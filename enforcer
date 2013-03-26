@@ -5,6 +5,7 @@ use strict;
 use File::Basename;
 use File::Find;
 use List::MoreUtils qw(all any);
+use List::Util qw(first);
 
 my $SECTION_SEPARATOR = ' - ';
 my $SERIES_EPISODE = 'S([0-9]+)E([0-9]+)([a-z]*)';
@@ -47,8 +48,8 @@ sub check_case {
 	return CASE_NO_MATCH unless $i_match;
 	my $c_match = $string =~ /$match/;
 	return $c_match ?
-		CASE_BAD_MATCH :
-		CASE_FULL_MATCH;
+		CASE_FULL_MATCH :
+		CASE_BAD_MATCH;
 }
 
 my $error_last_dir;
@@ -134,12 +135,20 @@ find(sub {
 			return 1;
 		}
 	} elsif (defined $tags && $tags ne '') {
-		print_error "Unknown tags format";
+		print_error 'Unknown tags format';
 		return 1;
 	}
 
 	if (defined $ripper) {
-
+		my $match_type = 0;
+		my $match = first { $match_type = check_case($ripper, $_); $match_type } @$RIPPERS;
+		if ($match_type == CASE_NO_MATCH) {
+			print_error 'Invalid ripper';
+			return 1;
+		} elsif ($match_type == CASE_BAD_MATCH) {
+			print_error "Incorrect case for ripper $ripper->$match";
+			return 1;
+		}
 	}
 
 }, @ARGV);
