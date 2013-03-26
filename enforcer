@@ -27,6 +27,15 @@ my $RIPPERS = [qw(
 )];
 my $FILE_EXT = '\.([a-z0-9]+)';
 
+my $ALL_TAGS = [
+	@$TAGS,
+	map { @{$TAGS_SYNONYMS->{$_}} } keys %$TAGS_SYNONYMS
+];
+
+use constant CASE_NO_MATCH   => 0;
+use constant CASE_BAD_MATCH  => 1;
+use constant CASE_FULL_MATCH => 2;
+
 my $type = shift @ARGV;
 foreach (@ARGV) {
 	$_ .= '/' unless (m{/$});
@@ -35,9 +44,11 @@ foreach (@ARGV) {
 sub check_case {
 	my ($string, $match) = @_;
 	my $i_match = $string =~ /$match/i;
-	return 1 unless $i_match;
+	return CASE_NO_MATCH unless $i_match;
 	my $c_match = $string =~ /$match/;
-	return $c_match;
+	return $c_match ?
+		CASE_BAD_MATCH :
+		CASE_FULL_MATCH;
 }
 
 my $error_last_dir;
@@ -84,7 +95,7 @@ find(sub {
 		return 1;
 	}
 	foreach my $word (@$EP_NAME_CASE) {
-		if (!check_case($name, " $word ")) {
+		if (check_case($name, " $word ") == CASE_BAD_MATCH) {
 			print_error "Invalid case for $word";
 			return 1;
 		}
@@ -122,9 +133,13 @@ find(sub {
 			print_error 'Invalid tag(s) ' . join(', ', @tags_list);
 			return 1;
 		}
-	} elsif ($tags =~ /.*/) {
+	} elsif (defined $tags && $tags ne '') {
 		print_error "Unknown tags format";
 		return 1;
+	}
+
+	if (defined $ripper) {
+
 	}
 
 }, @ARGV);
