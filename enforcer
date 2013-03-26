@@ -97,7 +97,7 @@ find(sub {
 	}
 	foreach my $word (@$EP_NAME_CASE) {
 		if (check_case($name, " $word ") == CASE_BAD_MATCH) {
-			print_error "Invalid case for $word";
+			print_error "Invalid case for \"$word\"";
 			return 1;
 		}
 	}
@@ -116,7 +116,7 @@ find(sub {
 		}
 		foreach my $tag (@tags_list) {
 			if (any { $_ eq $tag } @$TAGS) {
-				print_error "Incorrect order of tags, starting at $tag";
+				print_error "Incorrect order of tags, starting at \"$tag\"";
 				return 1;
 			}
 		}
@@ -143,7 +143,7 @@ find(sub {
 		my $match_type = 0;
 		my $match = first { $match_type = check_case($ripper, $_); $match_type } @$RIPPERS;
 		if ($match_type == CASE_NO_MATCH) {
-			print_error 'Invalid ripper';
+			print_error "Invalid ripper \"$ripper\"";
 			return 1;
 		} elsif ($match_type == CASE_BAD_MATCH) {
 			print_error "Incorrect case for ripper $ripper->$match";
