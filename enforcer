@@ -12,7 +12,7 @@ my $SERIES_EPISODE = 'S([0-9]+)E([0-9]+)([a-z]*)';
 my $SERIES_EPISODE_EXTENDED = 'S([0-9]{2})E([0-9]{2})([a-z]?)';
 my $EP_NAME_VALID = '[a-zA-Z0-9 ,\\\-]';
 my $EP_NAME_CASE = [qw(
-	a and if in is or the
+	a and if in is or
 )];
 my $TAG_MATCH = '(?:\[([^]]+)\])';
 my $TAGS = [qw(
@@ -23,8 +23,9 @@ my $TAGS_SYNONYMS = {
 	BDRip => [qw(BRRip BluRay)],
 };
 my $RIPPERS = [qw(
-	2HD AFG DIMENSION EVOLVE FoV FQM HANNiBAL IMMERSE
-	Indi LOL MOMENTUM NPFS m00tv ORENJI SYS TLA TSV
+	2HD AFG ASAP CTU DIMENSION EVOLVE FoV FQM HANNiBAL 
+	IMMERSE Indi LOL MOMENTUM NPFS m00tv ORENJI SYS TLA
+	TSV
 )];
 my $FILE_EXT = '\.([a-z0-9]+)';
 
