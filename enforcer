@@ -24,8 +24,8 @@ my $TAGS_SYNONYMS = {
 };
 my $RIPPERS = [qw(
 	2HD AFG ASAP AVS CTU DIMENSION EVOLVE FoV FQM HANNiBAL 
-	IMMERSE Indi LOL MOMENTUM NPFS m00tv ORENJI SYS TLA
-	TSV
+	IMMERSE Indi LiLDiCK LOL MOMENTUM NPFS m00tv ORENJI SYS TLA
+	TSV XII
 )];
 my $FILE_EXT = '\.([a-z0-9]+)';
 
@@ -65,6 +65,11 @@ sub print_error {
 }
 find(sub {
 	return 0 unless -f $_;
+
+	if (/\s{2}/) {
+		print_error "Name has multiple consecutive whitespace characters";
+		return 1;
+	}
 
 	s/$FILE_EXT$//;
 	my ($series, $name, $tags, $ripper, $more) =
